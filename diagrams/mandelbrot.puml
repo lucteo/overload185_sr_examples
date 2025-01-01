@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+
+rectangle bulk {
+  rectangle row0 as "row 0"
+  rectangle row1 as "row 1"
+  label dots as "..."
+  rectangle rowN as "row max_y"
+}
+rectangle sync_wait
+
+interface start as " "
+' interface end as " "
+
+start --> row0
+start --> row1
+start --> dots #transparent
+start --> rowN
+
+row0 --> sync_wait
+row1 --> sync_wait
+dots --> sync_wait #transparent
+rowN --> sync_wait
+
+' sync_wait --> end
+
+@enduml

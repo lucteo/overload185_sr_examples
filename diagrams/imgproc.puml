@@ -1,0 +1,88 @@
+@startuml
+left to right direction
+
+interface start as " "
+
+rectangle read_file1 as "read_file" <<io>>
+rectangle read_file2 as "read_file" <<io>>
+rectangle read_file3 as "read_file" <<io>>
+
+rectangle imdecode1 as "cv::imdecode"
+rectangle imdecode2 as "cv::imdecode"
+rectangle imdecode3 as "cv::imdecode"
+
+' rectangle tr_catoonify1 as "tr_catoonify" {
+  rectangle edges1 as "blur/grayscale/adaptthresh"
+  rectangle col1 as "reducecolors"
+  rectangle when_all1 as "when_all"
+  rectangle apply_mask1 as "apply_mask"
+  edges1 --> when_all1
+  col1 --> when_all1
+  when_all1 --> apply_mask1
+' }
+' rectangle tr_catoonify2 as "tr_catoonify" {
+  rectangle edges2 as "blur/grayscale/adaptthresh"
+  rectangle col2 as "reducecolors"
+  rectangle when_all2 as "when_all"
+  rectangle apply_mask2 as "apply_mask"
+  edges2 --> when_all2
+  col2 --> when_all2
+  when_all2 --> apply_mask2
+' }
+' rectangle tr_catoonify3 as "tr_catoonify" {
+  rectangle edges3 as "blur/grayscale/adaptthresh"
+  rectangle col3 as "reducecolors"
+  rectangle when_all3 as "when_all"
+  rectangle apply_mask3 as "apply_mask"
+  edges3 --> when_all3
+  col3 --> when_all3
+  when_all3 --> apply_mask3
+' }
+
+rectangle imencode1 as "cv::imencode"
+rectangle imencode2 as "cv::imencode"
+rectangle imencode3 as "cv::imencode"
+
+rectangle write_file1 as "write_file" <<io>>
+rectangle write_file2 as "write_file" <<io>>
+rectangle write_file3 as "write_file" <<io>>
+
+rectangle on_empty
+rectangle sync_wait
+
+start --> read_file1
+start --> read_file2
+start --> read_file3
+
+read_file1 --> imdecode1
+read_file2 --> imdecode2
+read_file3 --> imdecode3
+
+imdecode1 --> edges1
+imdecode2 --> edges2
+imdecode3 --> edges3
+imdecode1 --> col1
+imdecode2 --> col2
+imdecode3 --> col3
+
+apply_mask1 --> imencode1
+apply_mask2 --> imencode2
+apply_mask3 --> imencode3
+
+imencode1 --> write_file1
+imencode2 --> write_file2
+imencode3 --> write_file3
+
+write_file1 --> on_empty
+write_file2 --> on_empty
+write_file3 --> on_empty
+
+read_file1 ..> read_file2
+read_file2 ..> read_file3
+
+write_file1 ..> write_file2 #transparent
+write_file2 ..> write_file3 #transparent
+
+on_empty --> sync_wait
+
+@enduml

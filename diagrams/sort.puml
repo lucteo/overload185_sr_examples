@@ -1,0 +1,44 @@
+@startuml
+left to right direction
+
+rectangle csort as "concurrent_sort_impl" {
+  rectangle part as "sort_partition"
+  rectangle csort1  as "concurrent_sort_impl" {
+    rectangle part1 as "sort_partition"
+    rectangle csort11  as "concurrent_sort_impl\n..." {
+
+    }
+    rectangle csort12  as "concurrent_sort_impl\n..." {
+
+    }
+
+    part1 --> csort11
+    part1 --> csort12
+  }
+  rectangle csort2  as "concurrent_sort_impl" {
+    rectangle part2 as "sort_partition"
+    rectangle csort21  as "concurrent_sort_impl\n..." {
+
+    }
+    rectangle csort22  as "concurrent_sort_impl\n..." {
+
+    }
+
+    part2 --> csort21
+    part2 --> csort22
+  }
+
+  part --> csort1
+  part --> csort2
+}
+
+rectangle on_empty
+rectangle sync_wait
+
+csort11 --> on_empty
+csort12 --> on_empty
+csort21 --> on_empty
+csort22 --> on_empty
+on_empty --> sync_wait
+
+@enduml
